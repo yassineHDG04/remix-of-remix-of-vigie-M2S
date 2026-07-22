@@ -157,10 +157,10 @@ Un appel téléphonique réel reste nécessaire avant de déclarer le pipeline v
 
 Hypothèse : 100 appels/jour, 45 secondes/appel, 30 jours, soit 2 250 minutes connectées/mois.
 
-| Mode | Coût IA estimé/min | Coût IA mensuel | Latence de réponse attendue | Risque darija |
-|---|---:|---:|---:|---|
-| Realtime | ~0,050 USD | ~112,50 USD, soit ~1 027 DH | ~0,3 à 0,8 s | Référence actuelle |
-| Pipeline | ~0,010 USD | ~22,50 USD, soit ~205 DH | ~1,2 à 2,5 s | Dégradation possible de 5 à 20 points |
+| Mode     | Coût IA estimé/min |             Coût IA mensuel | Latence de réponse attendue | Risque darija                         |
+| -------- | -----------------: | --------------------------: | --------------------------: | ------------------------------------- |
+| Realtime |         ~0,050 USD | ~112,50 USD, soit ~1 027 DH |                ~0,3 à 0,8 s | Référence actuelle                    |
+| Pipeline |         ~0,010 USD |    ~22,50 USD, soit ~205 DH |                ~1,2 à 2,5 s | Dégradation possible de 5 à 20 points |
 
 Conversion indicative utilisée : 1 USD ≈ 9,1283 DH. Les montants sont des estimations d'ingénierie,
 pas une promesse de facturation. Pour mesurer la qualité, réaliser un A/B test sur au moins 100 appels
@@ -177,4 +177,3 @@ Références :
 - [Silero VAD LiveKit](https://docs.livekit.io/agents/logic-structure/turns/vad/)
 - [Tarifs et modèles OpenAI](https://openai.com/api/pricing/)
 - [Cours de change Bank Al-Maghrib](https://www.bkam.ma/en/Markets/Key-indicators/Foreign-exchange-market)
-

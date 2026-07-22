@@ -304,87 +304,87 @@ Utiliser une sortie pour `VIGIE_API_KEY`, une autre pour `ENGINE_TICK_TOKEN`, un
 
 ### Données et sécurité
 
-| Variable | Usage | Obligatoire en production | Source |
-|---|---|---:|---|
-| `DATABASE_URL` | Base SQLAlchemy locale/directe | Non avec Supabase API | SQLite local ou connexion Postgres Supabase |
-| `USE_SUPABASE` | Active le repository Supabase | Oui : `true` | Choix d'architecture |
-| `SUPABASE_URL` | URL de l'API Supabase | Oui | Dashboard Supabase |
-| `SUPABASE_ANON_KEY` | En-tête API public avant connexion du compte de service | Oui | Dashboard Supabase |
-| `SUPABASE_SERVICE_EMAIL` | Identité Auth du moteur | Oui | Compte créé par l'administrateur |
-| `SUPABASE_SERVICE_PASSWORD` | Mot de passe de cette identité | Oui | Choisi lors de la création |
-| `SUPABASE_SERVICE_ROLE_KEY` | Accès serveur privilégié alternatif | Non dans l'architecture actuelle | Dashboard Supabase, si disponible |
-| `VIGIE_API_KEY` | Protège les routes internes et le callback du worker | Oui | Secret généré localement |
-| `ENGINE_TICK_TOKEN` | Protège le déclenchement manuel/cron du tick | Oui si cron externe | Secret généré localement |
-| `CORS_ORIGINS` | Origines frontend autorisées, séparées par des virgules | Oui | URL(s) du frontend |
+| Variable                    | Usage                                                   |        Obligatoire en production | Source                                      |
+| --------------------------- | ------------------------------------------------------- | -------------------------------: | ------------------------------------------- |
+| `DATABASE_URL`              | Base SQLAlchemy locale/directe                          |            Non avec Supabase API | SQLite local ou connexion Postgres Supabase |
+| `USE_SUPABASE`              | Active le repository Supabase                           |                     Oui : `true` | Choix d'architecture                        |
+| `SUPABASE_URL`              | URL de l'API Supabase                                   |                              Oui | Dashboard Supabase                          |
+| `SUPABASE_ANON_KEY`         | En-tête API public avant connexion du compte de service |                              Oui | Dashboard Supabase                          |
+| `SUPABASE_SERVICE_EMAIL`    | Identité Auth du moteur                                 |                              Oui | Compte créé par l'administrateur            |
+| `SUPABASE_SERVICE_PASSWORD` | Mot de passe de cette identité                          |                              Oui | Choisi lors de la création                  |
+| `SUPABASE_SERVICE_ROLE_KEY` | Accès serveur privilégié alternatif                     | Non dans l'architecture actuelle | Dashboard Supabase, si disponible           |
+| `VIGIE_API_KEY`             | Protège les routes internes et le callback du worker    |                              Oui | Secret généré localement                    |
+| `ENGINE_TICK_TOKEN`         | Protège le déclenchement manuel/cron du tick            |              Oui si cron externe | Secret généré localement                    |
+| `CORS_ORIGINS`              | Origines frontend autorisées, séparées par des virgules |                              Oui | URL(s) du frontend                          |
 
 ### Exécution du moteur
 
-| Variable | Usage | Valeur conseillée |
-|---|---|---|
-| `ENGINE_AUTOSTART` | Lance la boucle d'escalade avec FastAPI | `true` sur un seul backend permanent |
-| `ENGINE_TICK_SECONDS` | Fréquence de vérification | `60` |
-| `MOCK_MODE` | Simule les appels sans LiveKit/OpenAI | `true` en test, `false` en réel |
-| `MOCK_ANSWER_RATE` | Probabilité de réponse en simulation | `0.7` |
+| Variable              | Usage                                   | Valeur conseillée                    |
+| --------------------- | --------------------------------------- | ------------------------------------ |
+| `ENGINE_AUTOSTART`    | Lance la boucle d'escalade avec FastAPI | `true` sur un seul backend permanent |
+| `ENGINE_TICK_SECONDS` | Fréquence de vérification               | `60`                                 |
+| `MOCK_MODE`           | Simule les appels sans LiveKit/OpenAI   | `true` en test, `false` en réel      |
+| `MOCK_ANSWER_RATE`    | Probabilité de réponse en simulation    | `0.7`                                |
 
 Ne pas démarrer plusieurs réplicas avec `ENGINE_AUTOSTART=true` sans verrou distribué, sous peine de déclenchements concurrents.
 
 ### LiveKit, SIP et WhatsApp Calling
 
-| Variable | Usage | Source |
-|---|---|---|
-| `LIVEKIT_URL` | Projet média auquel backend/worker se connectent | LiveKit Cloud |
-| `LIVEKIT_API_KEY` | Identifiant d'API LiveKit | LiveKit Cloud |
-| `LIVEKIT_API_SECRET` | Secret de signature LiveKit | LiveKit Cloud |
-| `SIP_TRUNK_ID` | Trunk sortant de repli | LiveKit Telephony |
-| `SIP_CALLER_ID` | Numéro autorisé présenté au constateur | Opérateur SIP |
-| `SIP_ESTIMATED_COST_PER_MINUTE_USD` | Estimation interne, sans effet sur la facture | Contrat opérateur |
-| `WHATSAPP_CALLS_ENABLED` | Autorise les appels WhatsApp audio | `false` jusqu'à validation Meta |
-| `WHATSAPP_CALLS_ACCESS_TOKEN` | Token Meta Cloud API pour les appels | Meta |
-| `WHATSAPP_CALLS_PHONE_NUMBER_ID` | Numéro WhatsApp Business appelant | Meta |
-| `WHATSAPP_CALLS_CLOUD_API_VERSION` | Version utilisée avec le connecteur | `24.0` |
-| `WHATSAPP_CALLS_DESTINATION_COUNTRY` | Routage pays | `MA` |
-| `WHATSAPP_CALLS_RINGING_TIMEOUT_SECONDS` | Délai de sonnerie avant non-réponse | `35` |
-| `WHATSAPP_ESTIMATED_COST_PER_MINUTE_USD` | Estimation interne du transport WhatsApp | Devis Meta/LiveKit ; `0` = inconnu |
+| Variable                                 | Usage                                            | Source                             |
+| ---------------------------------------- | ------------------------------------------------ | ---------------------------------- |
+| `LIVEKIT_URL`                            | Projet média auquel backend/worker se connectent | LiveKit Cloud                      |
+| `LIVEKIT_API_KEY`                        | Identifiant d'API LiveKit                        | LiveKit Cloud                      |
+| `LIVEKIT_API_SECRET`                     | Secret de signature LiveKit                      | LiveKit Cloud                      |
+| `SIP_TRUNK_ID`                           | Trunk sortant de repli                           | LiveKit Telephony                  |
+| `SIP_CALLER_ID`                          | Numéro autorisé présenté au constateur           | Opérateur SIP                      |
+| `SIP_ESTIMATED_COST_PER_MINUTE_USD`      | Estimation interne, sans effet sur la facture    | Contrat opérateur                  |
+| `WHATSAPP_CALLS_ENABLED`                 | Autorise les appels WhatsApp audio               | `false` jusqu'à validation Meta    |
+| `WHATSAPP_CALLS_ACCESS_TOKEN`            | Token Meta Cloud API pour les appels             | Meta                               |
+| `WHATSAPP_CALLS_PHONE_NUMBER_ID`         | Numéro WhatsApp Business appelant                | Meta                               |
+| `WHATSAPP_CALLS_CLOUD_API_VERSION`       | Version utilisée avec le connecteur              | `24.0`                             |
+| `WHATSAPP_CALLS_DESTINATION_COUNTRY`     | Routage pays                                     | `MA`                               |
+| `WHATSAPP_CALLS_RINGING_TIMEOUT_SECONDS` | Délai de sonnerie avant non-réponse              | `35`                               |
+| `WHATSAPP_ESTIMATED_COST_PER_MINUTE_USD` | Estimation interne du transport WhatsApp         | Devis Meta/LiveKit ; `0` = inconnu |
 
 ### Agent OpenAI
 
-| Variable | Usage | Repli conseillé |
-|---|---|---|
-| `OPENAI_API_KEY` | Authentification OpenAI | Clé de projet dédiée |
-| `VOICE_ENGINE` | `realtime` ou `pipeline` | `pipeline` pour le coût |
-| `OPENAI_REALTIME_MODEL` | Modèle speech-to-speech | `gpt-realtime-mini` |
-| `STT_PROVIDER` | Fournisseur transcription | `openai` |
-| `OPENAI_TRANSCRIPTION_MODEL` | Modèle STT | `gpt-4o-mini-transcribe` |
-| `OPENAI_INPUT_LANGUAGE` | Langue STT | `ar` pour darija code-switchée |
-| `OPENAI_LLM_MODEL` | Modèle de compréhension/réponse | `gpt-4o-mini` |
-| `TTS_PROVIDER` | Fournisseur de voix | `openai` |
-| `OPENAI_TTS_MODEL` | Modèle de synthèse | `gpt-4o-mini-tts` |
-| `OPENAI_TTS_VOICE` | Voix | `ash`, `coral`, `sage` ou `verse` |
-| `AGENT_MAX_CALL_SECONDS` | Coupure dure | `60` |
-| `AGENT_MAX_RESPONSE_TOKENS` | Limite d'une réponse | `200` |
-| `AGENT_MAX_TURNS` | Nombre maximal de tours | `6` |
-| `VIGIE_API_BASE_URL` | Backend public auquel le worker poste le résultat | URL HTTPS du backend |
+| Variable                     | Usage                                             | Repli conseillé                   |
+| ---------------------------- | ------------------------------------------------- | --------------------------------- |
+| `OPENAI_API_KEY`             | Authentification OpenAI                           | Clé de projet dédiée              |
+| `VOICE_ENGINE`               | `realtime` ou `pipeline`                          | `pipeline` pour le coût           |
+| `OPENAI_REALTIME_MODEL`      | Modèle speech-to-speech                           | `gpt-realtime-mini`               |
+| `STT_PROVIDER`               | Fournisseur transcription                         | `openai`                          |
+| `OPENAI_TRANSCRIPTION_MODEL` | Modèle STT                                        | `gpt-4o-mini-transcribe`          |
+| `OPENAI_INPUT_LANGUAGE`      | Langue STT                                        | `ar` pour darija code-switchée    |
+| `OPENAI_LLM_MODEL`           | Modèle de compréhension/réponse                   | `gpt-4o-mini`                     |
+| `TTS_PROVIDER`               | Fournisseur de voix                               | `openai`                          |
+| `OPENAI_TTS_MODEL`           | Modèle de synthèse                                | `gpt-4o-mini-tts`                 |
+| `OPENAI_TTS_VOICE`           | Voix                                              | `ash`, `coral`, `sage` ou `verse` |
+| `AGENT_MAX_CALL_SECONDS`     | Coupure dure                                      | `60`                              |
+| `AGENT_MAX_RESPONSE_TOKENS`  | Limite d'une réponse                              | `200`                             |
+| `AGENT_MAX_TURNS`            | Nombre maximal de tours                           | `6`                               |
+| `VIGIE_API_BASE_URL`         | Backend public auquel le worker poste le résultat | URL HTTPS du backend              |
 
 ### M2S, alertes et démonstration
 
-| Variable | Usage | Source |
-|---|---|---|
-| `M2S_WHATSAPP_API_URL` | Base URL d'envoi de l'alerte texte | Équipe m2s-api |
-| `M2S_WHATSAPP_API_KEY` | Bearer de m2s-api | Équipe m2s-api |
-| `M2S_WHATSAPP_INSTANCE_ID` | Instance expéditrice | Équipe m2s-api |
-| `ZINEB_WHATSAPP` | Destinataire de repli | Numéro superviseur |
-| `WHATSAPP_APP_SECRET` | Vérification de signature Meta | Meta App Settings |
-| `WHATSAPP_WEBHOOK_VERIFY_TOKEN` | Challenge GET du webhook Meta | Secret choisi localement |
+| Variable                                                            | Usage                                           | Source                                   |
+| ------------------------------------------------------------------- | ----------------------------------------------- | ---------------------------------------- |
+| `M2S_WHATSAPP_API_URL`                                              | Base URL d'envoi de l'alerte texte              | Équipe m2s-api                           |
+| `M2S_WHATSAPP_API_KEY`                                              | Bearer de m2s-api                               | Équipe m2s-api                           |
+| `M2S_WHATSAPP_INSTANCE_ID`                                          | Instance expéditrice                            | Équipe m2s-api                           |
+| `ZINEB_WHATSAPP`                                                    | Destinataire de repli                           | Numéro superviseur                       |
+| `WHATSAPP_APP_SECRET`                                               | Vérification de signature Meta                  | Meta App Settings                        |
+| `WHATSAPP_WEBHOOK_VERIFY_TOKEN`                                     | Challenge GET du webhook Meta                   | Secret choisi localement                 |
 | `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_TEMPLATE_*` | Compatibilité de l'ancienne alerte Meta directe | Laisser vide sauf réactivation explicite |
-| `M2S_API_TOKEN` | Authentifie le polling M2S | Équipe M2S |
-| `M2S_WEBHOOK_SECRET` | Vérifie le webhook M2S | Secret partagé |
-| `M2S_STATUS_FIELD` | Chemin du statut JSON | Contrat M2S |
-| `M2S_VALIDATED_STATUS_VALUES` | Liste des statuts validés | Contrat M2S |
-| `M2S_ACTIVE_STATUS_VALUES` | Liste des statuts actifs | Contrat M2S |
-| `M2S_DOSSIERS_API_URL` | Repli de l'URL de polling | Équipe M2S |
-| `M2S_POLL_ENABLED` | Repli d'activation polling | `false` tant que non configuré |
-| `M2S_POLL_INTERVAL_SECONDS` | Repli de cadence | `300` |
-| `AUTO_DOSSIER_*` | Générateur d'essai sans API M2S | Toujours désactivé en production |
+| `M2S_API_TOKEN`                                                     | Authentifie le polling M2S                      | Équipe M2S                               |
+| `M2S_WEBHOOK_SECRET`                                                | Vérifie le webhook M2S                          | Secret partagé                           |
+| `M2S_STATUS_FIELD`                                                  | Chemin du statut JSON                           | Contrat M2S                              |
+| `M2S_VALIDATED_STATUS_VALUES`                                       | Liste des statuts validés                       | Contrat M2S                              |
+| `M2S_ACTIVE_STATUS_VALUES`                                          | Liste des statuts actifs                        | Contrat M2S                              |
+| `M2S_DOSSIERS_API_URL`                                              | Repli de l'URL de polling                       | Équipe M2S                               |
+| `M2S_POLL_ENABLED`                                                  | Repli d'activation polling                      | `false` tant que non configuré           |
+| `M2S_POLL_INTERVAL_SECONDS`                                         | Repli de cadence                                | `300`                                    |
+| `AUTO_DOSSIER_*`                                                    | Générateur d'essai sans API M2S                 | Toujours désactivé en production         |
 
 ## 6. Comprendre la page `/parametres`
 
@@ -392,13 +392,13 @@ Toutes les cartes utilisent le même bouton **Enregistrer** en bas de page. Le b
 
 ### 6.1 Priorité entre dashboard et `.env`
 
-| Réglage | Priorité normale | Redémarrage |
-|---|---|---|
-| Seuils, stratégie d'appel, SLA, modèles et garde-fous | `/parametres` | Non, prochain appel/tick |
-| URL/clés LiveKit utilisées par le backend pour dispatcher | `/parametres`, puis `.env` | Non pour le backend |
-| URL/clés LiveKit utilisées par le worker pour s'enregistrer | `.env` du worker | **Oui, redémarrer le worker** |
-| Clé OpenAI et configuration vocale d'un appel | `/parametres`, puis `.env` | Non, prochain appel |
-| Secrets Meta/M2S et `VIGIE_API_KEY` | `.env` uniquement | Oui dans le service concerné |
+| Réglage                                                     | Priorité normale           | Redémarrage                   |
+| ----------------------------------------------------------- | -------------------------- | ----------------------------- |
+| Seuils, stratégie d'appel, SLA, modèles et garde-fous       | `/parametres`              | Non, prochain appel/tick      |
+| URL/clés LiveKit utilisées par le backend pour dispatcher   | `/parametres`, puis `.env` | Non pour le backend           |
+| URL/clés LiveKit utilisées par le worker pour s'enregistrer | `.env` du worker           | **Oui, redémarrer le worker** |
+| Clé OpenAI et configuration vocale d'un appel               | `/parametres`, puis `.env` | Non, prochain appel           |
+| Secrets Meta/M2S et `VIGIE_API_KEY`                         | `.env` uniquement          | Oui dans le service concerné  |
 
 Changer `LIVEKIT_URL` dans le dashboard ne déplace pas automatiquement un worker déjà connecté. Mettre les nouvelles valeurs dans son environnement et redémarrer `python -m agent.worker dev`.
 
@@ -532,15 +532,15 @@ Attention à l'unité : 100 appels/jour × 30 jours × 45 secondes représentent
 
 ### 8.2 Tarifs OpenAI des modèles intégrés
 
-| Modèle | Rôle | Tarif public utile au calcul |
-|---|---|---|
-| `gpt-realtime` | Audio-à-audio | audio entrée 32 USD/M tokens, audio sortie 64 USD/M ; texte 4/16 USD/M |
-| `gpt-realtime-mini` | Audio-à-audio économique | estimation LiveKit : 0,0216 USD/min ; texte OpenAI 0,60/2,40 USD/M |
-| `gpt-4o-mini-transcribe` | STT | audio entrée 1,25 USD/M, sortie 5 USD/M |
-| `gpt-4o-transcribe` | STT qualité | audio entrée 2,50 USD/M, sortie 10 USD/M |
-| `gpt-4o-mini` | LLM économique | texte entrée 0,15 USD/M, sortie 0,60 USD/M |
-| `gpt-4.1-mini` | LLM qualité | texte entrée 0,40 USD/M, sortie 1,60 USD/M |
-| `gpt-4o-mini-tts` | Synthèse vocale | texte entrée 0,60 USD/M, audio sortie 12 USD/M |
+| Modèle                   | Rôle                     | Tarif public utile au calcul                                           |
+| ------------------------ | ------------------------ | ---------------------------------------------------------------------- |
+| `gpt-realtime`           | Audio-à-audio            | audio entrée 32 USD/M tokens, audio sortie 64 USD/M ; texte 4/16 USD/M |
+| `gpt-realtime-mini`      | Audio-à-audio économique | estimation LiveKit : 0,0216 USD/min ; texte OpenAI 0,60/2,40 USD/M     |
+| `gpt-4o-mini-transcribe` | STT                      | audio entrée 1,25 USD/M, sortie 5 USD/M                                |
+| `gpt-4o-transcribe`      | STT qualité              | audio entrée 2,50 USD/M, sortie 10 USD/M                               |
+| `gpt-4o-mini`            | LLM économique           | texte entrée 0,15 USD/M, sortie 0,60 USD/M                             |
+| `gpt-4.1-mini`           | LLM qualité              | texte entrée 0,40 USD/M, sortie 1,60 USD/M                             |
+| `gpt-4o-mini-tts`        | Synthèse vocale          | texte entrée 0,60 USD/M, audio sortie 12 USD/M                         |
 
 Sources officielles : [gpt-realtime](https://developers.openai.com/api/docs/models/gpt-realtime), [gpt-realtime-mini](https://developers.openai.com/api/docs/models/gpt-realtime-mini), [gpt-4o-mini-transcribe](https://developers.openai.com/api/docs/models/gpt-4o-mini-transcribe), [gpt-4o-transcribe](https://developers.openai.com/api/docs/models/gpt-4o-transcribe), [gpt-4o-mini](https://developers.openai.com/api/docs/models/gpt-4o-mini), [gpt-4.1-mini](https://developers.openai.com/api/docs/models/gpt-4.1-mini) et [gpt-4o-mini-tts](https://developers.openai.com/api/docs/models/gpt-4o-mini-tts).
 
@@ -548,12 +548,12 @@ Pour Realtime, OpenAI indique environ un token audio pour 100 ms de parole utili
 
 ### 8.3 Coût OpenAI mensuel estimé
 
-| Configuration | Calcul de planification | 4 000 min | En DH indicatifs |
-|---|---:|---:|---:|
-| `gpt-realtime` | estimation LiveKit 0,0676 USD/min | **270,40 USD** | **2 704 DH** |
-| `gpt-realtime-mini` | estimation LiveKit 0,0216 USD/min | **86,40 USD** | **864 DH** |
-| Pipeline économique | mini STT + `gpt-4o-mini` + TTS | **environ 42 USD** | **environ 420 DH** |
-| Pipeline qualité | STT qualité + `gpt-4.1-mini` + TTS | **environ 55 USD** | **environ 550 DH** |
+| Configuration       |            Calcul de planification |          4 000 min |   En DH indicatifs |
+| ------------------- | ---------------------------------: | -----------------: | -----------------: |
+| `gpt-realtime`      |  estimation LiveKit 0,0676 USD/min |     **270,40 USD** |       **2 704 DH** |
+| `gpt-realtime-mini` |  estimation LiveKit 0,0216 USD/min |      **86,40 USD** |         **864 DH** |
+| Pipeline économique |     mini STT + `gpt-4o-mini` + TTS | **environ 42 USD** | **environ 420 DH** |
+| Pipeline qualité    | STT qualité + `gpt-4.1-mini` + TTS | **environ 55 USD** | **environ 550 DH** |
 
 Détail du pipeline économique : environ 12 USD de transcription, 0,84 USD de LLM et 28,80 USD de voix. Le pipeline qualité utilise environ 24 USD de transcription, 2,24 USD de LLM et la même enveloppe TTS. Pour rendre l'estimation reproductible, la transcription est budgétée à environ 0,003 USD/min pour le modèle mini et 0,006 USD/min pour le modèle qualité sur les 4 000 minutes ; la voix suppose 2 000 minutes de parole IA. Ce sont des équivalents de planification dérivés des tarifs par token, pas des forfaits contractuels. Le coût réel dépend principalement du temps parlé, du nombre de tours et de la quantité de contexte.
 
@@ -584,12 +584,12 @@ Le connecteur WhatsApp est encore présenté comme une fonctionnalité Beta et a
 
 ### 8.5 Totaux de planification
 
-| Scénario | OpenAI | LiveKit | Sous-total | DH indicatifs | Budget 2 500 DH |
-|---|---:|---:|---:|---:|---|
-| Realtime qualité | 270,40 USD | 53,60 USD | **324,00 USD** | **3 240 DH** | Non, avant transport/hébergement |
-| Realtime mini | 86,40 USD | 53,60 USD | **140,00 USD** | **1 400 DH** | Possible avec marge limitée |
-| Pipeline économique | 42 USD | 53,60 USD | **95,60 USD** | **956 DH** | Oui, marge d'environ 1 544 DH |
-| Pipeline qualité | 55 USD | 53,60 USD | **108,60 USD** | **1 086 DH** | Oui, marge d'environ 1 414 DH |
+| Scénario            |     OpenAI |   LiveKit |     Sous-total | DH indicatifs | Budget 2 500 DH                  |
+| ------------------- | ---------: | --------: | -------------: | ------------: | -------------------------------- |
+| Realtime qualité    | 270,40 USD | 53,60 USD | **324,00 USD** |  **3 240 DH** | Non, avant transport/hébergement |
+| Realtime mini       |  86,40 USD | 53,60 USD | **140,00 USD** |  **1 400 DH** | Possible avec marge limitée      |
+| Pipeline économique |     42 USD | 53,60 USD |  **95,60 USD** |    **956 DH** | Oui, marge d'environ 1 544 DH    |
+| Pipeline qualité    |     55 USD | 53,60 USD | **108,60 USD** |  **1 086 DH** | Oui, marge d'environ 1 414 DH    |
 
 Ces sous-totaux n'incluent pas :
 

@@ -9,7 +9,7 @@ import uuid
 import httpx
 
 from ..config import config
-from datetime import datetime
+from ..time_utils import utcnow
 
 log = logging.getLogger("vigie.whatsapp")
 
@@ -181,7 +181,7 @@ def notify_handoff(
                 "instance_id": instance_id,
                 "recipient": recipient,
                 "status": message_status,
-                "accepted_at": datetime.utcnow(),
+                "accepted_at": utcnow(),
             }
         )
 

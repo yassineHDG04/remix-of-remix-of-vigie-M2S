@@ -58,10 +58,10 @@
   --radius: 0.75rem;
 
   /* Palette Nida'a M2S — noir & rouge inspiré du logo */
-  --background: oklch(1 0 0);                        /* #FFFFFF */
-  --surface: oklch(0.973 0.005 20);                  /* gris très clair chaud */
-  --foreground: oklch(0.18 0.01 20);                 /* noir doux #1A1517 */
-  --navy: oklch(0.18 0.01 20);                       /* renommé conceptuellement en "dark" */
+  --background: oklch(1 0 0); /* #FFFFFF */
+  --surface: oklch(0.973 0.005 20); /* gris très clair chaud */
+  --foreground: oklch(0.18 0.01 20); /* noir doux #1A1517 */
+  --navy: oklch(0.18 0.01 20); /* renommé conceptuellement en "dark" */
   --navy-foreground: oklch(0.98 0.005 20);
 
   --card: oklch(1 0 0);
@@ -69,7 +69,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.18 0.01 20);                    /* noir */
+  --primary: oklch(0.18 0.01 20); /* noir */
   --primary-foreground: oklch(0.98 0.005 20);
 
   --secondary: oklch(0.96 0.01 20);
@@ -78,9 +78,9 @@
   --muted: oklch(0.955 0.008 20);
   --muted-foreground: oklch(0.5 0.02 20);
 
-  --accent: oklch(0.62 0.22 27);                     /* rouge M2S #E63329 */
+  --accent: oklch(0.62 0.22 27); /* rouge M2S #E63329 */
   --accent-foreground: oklch(0.99 0.005 20);
-  --blue-soft: oklch(0.955 0.03 27);                 /* rouge très clair (halo) */
+  --blue-soft: oklch(0.955 0.03 27); /* rouge très clair (halo) */
 
   --success: oklch(0.522 0.11 155);
   --warning: oklch(0.545 0.115 75);
@@ -92,7 +92,7 @@
   --input: oklch(0.923 0.008 20);
   --ring: oklch(0.62 0.22 27);
 
-  --sidebar: oklch(0.16 0.008 20);                   /* noir profond */
+  --sidebar: oklch(0.16 0.008 20); /* noir profond */
   --sidebar-foreground: oklch(0.98 0.005 20);
   --sidebar-primary: var(--accent);
   --sidebar-primary-foreground: oklch(0.99 0 0);
@@ -100,7 +100,6 @@
   --sidebar-accent-foreground: oklch(0.98 0.005 20);
   --sidebar-border: oklch(0.24 0.01 20);
   --sidebar-ring: var(--accent);
-
 }
 
 .dark {
@@ -112,7 +111,8 @@
   * {
     border-color: var(--color-border);
   }
-  html, body {
+  html,
+  body {
     background-color: var(--color-surface);
     color: var(--color-foreground);
     font-family: var(--font-sans);
@@ -126,6 +126,11 @@
 }
 
 @keyframes pulseSlow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
 }

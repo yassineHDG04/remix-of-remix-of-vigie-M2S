@@ -10,7 +10,11 @@ export const Route = createFileRoute("/chargement")({
 function LoadingScreen() {
   const navigate = useNavigate();
   useEffect(() => {
-    try { sessionStorage.removeItem("vigie:justSignedIn"); } catch { /* ignore */ }
+    try {
+      sessionStorage.removeItem("vigie:justSignedIn");
+    } catch {
+      /* ignore */
+    }
     const t = setTimeout(() => navigate({ to: "/" }), 5000);
     return () => clearTimeout(t);
   }, [navigate]);

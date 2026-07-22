@@ -16,10 +16,23 @@ dist-ssr
 .nitro
 *.local
 
+# Configuration locale et secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Python / backend local
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.db
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
-.vigie-backend/.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -30,11 +43,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.env 
-.env.example
-.env
-.env.*
-!.env.example
-.venv/
-__pycache__/
-*.db

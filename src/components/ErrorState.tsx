@@ -8,7 +8,11 @@ interface Props {
   message?: string;
 }
 
-export function ErrorState({ onRetry, title = "Service indisponible", message = "Impossible de joindre le serveur. Réessaie dans un instant." }: Props) {
+export function ErrorState({
+  onRetry,
+  title = "Service indisponible",
+  message = "Impossible de joindre le serveur. Réessaie dans un instant.",
+}: Props) {
   return (
     <Card className="max-w-md mx-auto p-8 text-center">
       <div className="mx-auto h-12 w-12 rounded-full bg-critical/10 flex items-center justify-center mb-4">

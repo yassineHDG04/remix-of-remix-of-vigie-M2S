@@ -13,10 +13,8 @@ interface Props {
 function colorFor(minutesLeft: number): string {
   if (minutesLeft < 60)
     return "bg-critical/10 text-critical animate-pulse-slow ring-1 ring-critical/30";
-  if (minutesLeft < 90)
-    return "bg-warning/10 text-warning ring-1 ring-warning/30";
-  if (minutesLeft < 150)
-    return "bg-accent/10 text-accent ring-1 ring-accent/20";
+  if (minutesLeft < 90) return "bg-warning/10 text-warning ring-1 ring-warning/30";
+  if (minutesLeft < 150) return "bg-accent/10 text-accent ring-1 ring-accent/20";
   return "bg-success/10 text-success ring-1 ring-success/20";
 }
 
@@ -37,7 +35,13 @@ export function TimeRemainingBadge({ deadline, remainingMinutes, size = "md", cl
 
   if (!now) {
     return (
-      <span className={cn("inline-flex items-center rounded-full bg-muted text-muted-foreground tabular-nums", SIZES[size], className)}>
+      <span
+        className={cn(
+          "inline-flex items-center rounded-full bg-muted text-muted-foreground tabular-nums",
+          SIZES[size],
+          className,
+        )}
+      >
         —
       </span>
     );
@@ -48,7 +52,14 @@ export function TimeRemainingBadge({ deadline, remainingMinutes, size = "md", cl
       ? Math.max(0, remainingMinutes)
       : Math.max(0, Math.floor((deadline.getTime() - now.getTime()) / 60000));
   return (
-    <span className={cn("inline-flex items-center rounded-full tabular-nums", SIZES[size], colorFor(minutesLeft), className)}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full tabular-nums",
+        SIZES[size],
+        colorFor(minutesLeft),
+        className,
+      )}
+    >
       {formatRemaining(deadline, now)}
     </span>
   );

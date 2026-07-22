@@ -14,11 +14,13 @@ export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Connexion · Nida'a M2S" }] }),
 });
 
-
 function GoogleIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
-      <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1a6.2 6.2 0 1 1 0-12.4c1.8 0 3 .78 3.7 1.4l2.5-2.4A9.6 9.6 0 0 0 12 2a10 10 0 1 0 0 20c5.77 0 9.6-4.06 9.6-9.77 0-.66-.07-1.16-.16-1.66H12z" />
+      <path
+        fill="#EA4335"
+        d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1a6.2 6.2 0 1 1 0-12.4c1.8 0 3 .78 3.7 1.4l2.5-2.4A9.6 9.6 0 0 0 12 2a10 10 0 1 0 0 20c5.77 0 9.6-4.06 9.6-9.77 0-.66-.07-1.16-.16-1.66H12z"
+      />
     </svg>
   );
 }
@@ -40,7 +42,9 @@ function LoginPage() {
         setError(denied);
         sessionStorage.removeItem("vigie:accessDenied");
       }
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     if (isReady && isAuthenticated) navigate({ to: "/" });
   }, [isReady, isAuthenticated, navigate]);
 
@@ -85,7 +89,6 @@ function LoginPage() {
           </div>
         </div>
 
-
         <Card className="p-6 space-y-5">
           <div>
             <h1 className="text-xl font-semibold text-foreground">Connexion</h1>
@@ -101,12 +104,20 @@ function LoginPage() {
             onClick={onGoogle}
             disabled={googleLoading || loading}
           >
-            {googleLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <span className="mr-2"><GoogleIcon /></span>}
+            {googleLoading ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <span className="mr-2">
+                <GoogleIcon />
+              </span>
+            )}
             Continuer avec Google
           </Button>
 
           <div className="relative">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border" />
+            </div>
             <div className="relative flex justify-center">
               <span className="bg-card px-2 text-xs text-muted-foreground">ou par email</span>
             </div>

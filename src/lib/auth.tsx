@@ -96,10 +96,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
       // Flag "just signed in" pour forcer l'écran de chargement après login.
       if (event === "SIGNED_IN" && !hadSession && s?.user) {
-        try { sessionStorage.setItem("vigie:justSignedIn", "1"); } catch { /* ignore */ }
+        try {
+          sessionStorage.setItem("vigie:justSignedIn", "1");
+        } catch {
+          /* ignore */
+        }
       }
       if (event === "SIGNED_OUT") {
-        try { sessionStorage.removeItem("vigie:justSignedIn"); } catch { /* ignore */ }
+        try {
+          sessionStorage.removeItem("vigie:justSignedIn");
+        } catch {
+          /* ignore */
+        }
       }
       hadSession = !!s;
       setSession(s);

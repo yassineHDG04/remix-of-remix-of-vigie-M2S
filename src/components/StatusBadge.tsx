@@ -12,7 +12,13 @@ const STYLES: Record<CallStatus, string> = {
 
 export function CallStatusBadge({ status, className }: { status: CallStatus; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium", STYLES[status], className)}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
+        STYLES[status],
+        className,
+      )}
+    >
       {CALL_STATUS_LABEL[status]}
     </span>
   );
@@ -44,7 +50,8 @@ export function StageBadge({ stage, handoffReason, nbRelancesIa }: StageBadgePro
   const suffix = nbRelancesIa ? ` / ${nbRelancesIa}` : "";
   return (
     <span className="inline-flex items-center rounded-full bg-blue-soft px-2 py-0.5 text-xs font-semibold text-accent">
-      Relance IA n°{stage}{suffix}
+      Relance IA n°{stage}
+      {suffix}
     </span>
   );
 }

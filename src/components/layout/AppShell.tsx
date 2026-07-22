@@ -20,7 +20,13 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean; adminOnly?: boolean };
+type NavItem = {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+  adminOnly?: boolean;
+};
 const NAV: NavItem[] = [
   { to: "/", label: "Tableau de bord", icon: LayoutDashboard, exact: true },
   { to: "/critiques", label: "Dossiers critiques", icon: AlertOctagon },
@@ -43,7 +49,15 @@ function pageTitle(pathname: string): string {
   return "Nida'a M2S";
 }
 
-function NavLinks({ pathname, onNavigate, isAdmin }: { pathname: string; onNavigate?: () => void; isAdmin: boolean }) {
+function NavLinks({
+  pathname,
+  onNavigate,
+  isAdmin,
+}: {
+  pathname: string;
+  onNavigate?: () => void;
+  isAdmin: boolean;
+}) {
   return (
     <>
       {NAV.filter((i) => !i.adminOnly || isAdmin).map((item) => {
@@ -133,7 +147,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           />
           <div className="min-w-0">
             <div className="text-sm font-semibold leading-tight truncate">Nida'a M2S</div>
-            <div className="text-[11px] text-white/60 leading-tight truncate">Voicebot Assistant</div>
+            <div className="text-[11px] text-white/60 leading-tight truncate">
+              Voicebot Assistant
+            </div>
           </div>
         </div>
 
@@ -148,16 +164,30 @@ export function AppShell({ children }: { children: ReactNode }) {
         {/* Barre supérieure mobile */}
         <div className="md:hidden h-14 bg-sidebar text-sidebar-foreground flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <img src={nidaaLogo.url} alt="Nida'a M2S" className="h-8 w-8 rounded-lg bg-white/95 object-contain p-0.5" />
+            <img
+              src={nidaaLogo.url}
+              alt="Nida'a M2S"
+              className="h-8 w-8 rounded-lg bg-white/95 object-contain p-0.5"
+            />
             <div className="text-sm font-semibold">Nida'a M2S</div>
           </div>
           <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger className="p-2 rounded-md hover:bg-sidebar-accent" aria-label="Ouvrir le menu">
+            <SheetTrigger
+              className="p-2 rounded-md hover:bg-sidebar-accent"
+              aria-label="Ouvrir le menu"
+            >
               <Menu className="h-5 w-5" />
             </SheetTrigger>
-            <SheetContent side="left" className="bg-sidebar text-sidebar-foreground border-r-0 p-0 w-64 flex flex-col">
+            <SheetContent
+              side="left"
+              className="bg-sidebar text-sidebar-foreground border-r-0 p-0 w-64 flex flex-col"
+            >
               <div className="px-4 py-4 flex items-center gap-3 border-b border-sidebar-border">
-                <img src={nidaaLogo.url} alt="Nida'a M2S" className="h-11 w-11 rounded-lg bg-white/95 object-contain p-1" />
+                <img
+                  src={nidaaLogo.url}
+                  alt="Nida'a M2S"
+                  className="h-11 w-11 rounded-lg bg-white/95 object-contain p-1"
+                />
                 <div className="min-w-0">
                   <div className="text-sm font-semibold truncate">Nida'a M2S</div>
                   <div className="text-[11px] text-white/60 truncate">Voicebot Assistant</div>
@@ -167,7 +197,12 @@ export function AppShell({ children }: { children: ReactNode }) {
               <nav className="flex-1 px-3 py-4 space-y-1">
                 <NavLinks pathname={pathname} isAdmin={isAdmin} onNavigate={() => setOpen(false)} />
               </nav>
-              <ProfileBlock onLogout={() => { setOpen(false); handleLogout(); }} />
+              <ProfileBlock
+                onLogout={() => {
+                  setOpen(false);
+                  handleLogout();
+                }}
+              />
             </SheetContent>
           </Sheet>
         </div>

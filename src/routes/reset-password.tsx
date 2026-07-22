@@ -90,7 +90,9 @@ function ResetPasswordPage() {
               />
             </div>
             {error && (
-              <div className="rounded-md bg-critical/10 text-critical text-sm px-3 py-2">{error}</div>
+              <div className="rounded-md bg-critical/10 text-critical text-sm px-3 py-2">
+                {error}
+              </div>
             )}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}

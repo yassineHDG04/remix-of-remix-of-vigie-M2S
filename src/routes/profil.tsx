@@ -22,7 +22,9 @@ function StatusBadge({ status }: { status: "actif" | "suspendu" | "invite" }) {
   };
   const m = map[status] ?? map.actif;
   return (
-    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${m.cls}`}>
+    <span
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${m.cls}`}
+    >
       {m.label}
     </span>
   );
@@ -78,7 +80,9 @@ function ProfilPage() {
           </div>
           <div>
             <dt className="text-xs uppercase text-muted-foreground">Statut</dt>
-            <dd className="mt-1"><StatusBadge status={profile?.status ?? "actif"} /></dd>
+            <dd className="mt-1">
+              <StatusBadge status={profile?.status ?? "actif"} />
+            </dd>
           </div>
         </dl>
       </Card>
@@ -88,11 +92,25 @@ function ProfilPage() {
         <form onSubmit={changePassword} className="space-y-4 max-w-sm">
           <div className="space-y-1.5">
             <Label htmlFor="np">Nouveau mot de passe</Label>
-            <Input id="np" type="password" value={pwd} onChange={(e) => setPwd(e.target.value)} minLength={8} required />
+            <Input
+              id="np"
+              type="password"
+              value={pwd}
+              onChange={(e) => setPwd(e.target.value)}
+              minLength={8}
+              required
+            />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="cp">Confirmation</Label>
-            <Input id="cp" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} minLength={8} required />
+            <Input
+              id="cp"
+              type="password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              minLength={8}
+              required
+            />
           </div>
           <Button type="submit" disabled={loading}>
             {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}

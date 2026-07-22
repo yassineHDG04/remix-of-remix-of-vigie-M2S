@@ -45,7 +45,7 @@ class AppConfig(BaseSettings):
     whatsapp_calls_destination_country: str = "MA"
     whatsapp_calls_ringing_timeout_seconds: int = 35
     # Estimations configurables : elles ne remplacent jamais la facture réelle.
-    sip_estimated_cost_per_minute_usd: float = 1.4267
+    sip_estimated_cost_per_minute_usd: float = 0.0
     whatsapp_estimated_cost_per_minute_usd: float = 0.0
 
     openai_api_key: str = ""
@@ -84,7 +84,7 @@ class AppConfig(BaseSettings):
     # À désactiver le jour où l'API M2S est branchée.
     auto_dossier_enabled: bool = False
     auto_dossier_interval_hours: float = 2.0
-    auto_dossier_constateur_tel: str = "+212688503615"
+    auto_dossier_constateur_tel: str = "+212600000000"
     auto_dossier_constateur_nom: str = "Constateur M2S"
     auto_dossier_constateur_zone: str = "Casablanca"
     auto_dossier_ref_prefix: str = "DOS-AUTO"

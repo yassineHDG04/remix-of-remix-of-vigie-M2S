@@ -46,7 +46,7 @@ Verdict fonctionnel : **oui pour le flux partagé par Supabase**, après migrati
 Le tableau affiche désormais exactement :
 
 | Réf. sinistre | Assuré | Assurance | Matricule | Lieu du sinistre | Validé le |
-|---|---|---|---|---|---|
+| ------------- | ------ | --------- | --------- | ---------------- | --------- |
 
 Les filtres temporels, la pagination, le filtre de zone et l'ouverture du détail depuis une ligne sont conservés. La recherche couvre aussi les nouvelles valeurs affichées.
 
@@ -54,29 +54,29 @@ Les filtres temporels, la pagination, le filtre de zone et l'ouverture du détai
 
 ### Paramètres vocaux
 
-| Frontend | Colonne Supabase | Consommateur backend |
-|---|---|---|
-| `livekitUrl` | `livekit_url` | Dispatch LiveKit dans `app/providers/telephony.py` |
-| `livekitApiKey` | `livekit_api_key` | Dispatch LiveKit |
-| `livekitApiSecret` | `livekit_api_secret` | Dispatch LiveKit |
-| `openaiApiKey` | `openai_api_key` | Transmis au worker pour OpenAI Realtime |
-| `vigieApiBaseUrl` | `vigie_api_base_url` | URL de retour du résultat d'appel |
-| `agentMaxCallSeconds` | `agent_max_call_seconds` | Coupure dure du worker |
-| `agentMaxResponseTokens` | `agent_max_response_tokens` | Limite de tokens par réponse |
-| `agentMaxTurns` | `agent_max_turns` | Limite de tours de parole |
+| Frontend                 | Colonne Supabase            | Consommateur backend                               |
+| ------------------------ | --------------------------- | -------------------------------------------------- |
+| `livekitUrl`             | `livekit_url`               | Dispatch LiveKit dans `app/providers/telephony.py` |
+| `livekitApiKey`          | `livekit_api_key`           | Dispatch LiveKit                                   |
+| `livekitApiSecret`       | `livekit_api_secret`        | Dispatch LiveKit                                   |
+| `openaiApiKey`           | `openai_api_key`            | Transmis au worker pour OpenAI Realtime            |
+| `vigieApiBaseUrl`        | `vigie_api_base_url`        | URL de retour du résultat d'appel                  |
+| `agentMaxCallSeconds`    | `agent_max_call_seconds`    | Coupure dure du worker                             |
+| `agentMaxResponseTokens` | `agent_max_response_tokens` | Limite de tokens par réponse                       |
+| `agentMaxTurns`          | `agent_max_turns`           | Limite de tours de parole                          |
 
 ### Dossier M2S
 
-| Frontend | Colonne Supabase | Import backend M2S |
-|---|---|---|
-| `assure` | `assure` | `assuré`, `assure` ou `nom_assure` |
-| `vehicule` | `vehicule` | `vehicule` ou `véhicule` |
-| `matricule` | `matricule` | `matricule` |
-| `adresse` | `adresse` | `lieu_sinistre`, `adresse` ou `lieu` |
-| `zoneDossier` | `zone` | Extraction heuristique depuis le lieu |
-| `dateSinistre` | `date_sinistre` | `date_sisnistre`, `date_sinistre` ou `date_du_sinistre` |
-| `nomAssurance` | `nom_assurance` | `nom_assurance` ou `assurance` |
-| `numTelClient` | `num_tel_client` | Champ optionnel si M2S le fournit |
+| Frontend       | Colonne Supabase | Import backend M2S                                      |
+| -------------- | ---------------- | ------------------------------------------------------- |
+| `assure`       | `assure`         | `assuré`, `assure` ou `nom_assure`                      |
+| `vehicule`     | `vehicule`       | `vehicule` ou `véhicule`                                |
+| `matricule`    | `matricule`      | `matricule`                                             |
+| `adresse`      | `adresse`        | `lieu_sinistre`, `adresse` ou `lieu`                    |
+| `zoneDossier`  | `zone`           | Extraction heuristique depuis le lieu                   |
+| `dateSinistre` | `date_sinistre`  | `date_sisnistre`, `date_sinistre` ou `date_du_sinistre` |
+| `nomAssurance` | `nom_assurance`  | `nom_assurance` ou `assurance`                          |
+| `numTelClient` | `num_tel_client` | Champ optionnel si M2S le fournit                       |
 
 Le backend séparé fourni contient déjà les modèles, schémas Pydantic, imports et accès Supabase correspondant à ces colonnes. Aucun fichier Python n'a été modifié.
 

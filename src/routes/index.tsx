@@ -30,7 +30,17 @@ export const Route = createFileRoute("/")({
   head: () => ({ meta: [{ title: "Nida2 Voicebot Center - M2S" }] }),
 });
 
-function Kpi({ label, value, tone = "default", loading }: { label: string; value: string; tone?: "default" | "critical" | "accent" | "success"; loading?: boolean }) {
+function Kpi({
+  label,
+  value,
+  tone = "default",
+  loading,
+}: {
+  label: string;
+  value: string;
+  tone?: "default" | "critical" | "accent" | "success";
+  loading?: boolean;
+}) {
   const tones = {
     default: "text-foreground",
     critical: "text-critical",
@@ -39,7 +49,9 @@ function Kpi({ label, value, tone = "default", loading }: { label: string; value
   } as const;
   return (
     <Card className="p-5">
-      <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium">{label}</div>
+      <div className="text-xs uppercase tracking-wide text-muted-foreground font-medium">
+        {label}
+      </div>
       {loading ? (
         <Skeleton className="mt-3 h-8 w-16" />
       ) : (
@@ -77,7 +89,8 @@ function Dashboard() {
         }
         if (q) {
           const s = q.toLowerCase();
-          if (!d.refM2s.toLowerCase().includes(s) && !d.constateur.nom.toLowerCase().includes(s)) return false;
+          if (!d.refM2s.toLowerCase().includes(s) && !d.constateur.nom.toLowerCase().includes(s))
+            return false;
         }
         return true;
       })
@@ -85,7 +98,14 @@ function Dashboard() {
   }, [enRetard, q, zone, stageFilter]);
 
   if (dossiersQ.isError && !dossiersQ.data) {
-    return <ErrorState onRetry={() => { dossiersQ.refetch(); kpiQ.refetch(); }} />;
+    return (
+      <ErrorState
+        onRetry={() => {
+          dossiersQ.refetch();
+          kpiQ.refetch();
+        }}
+      />
+    );
   }
 
   return (
@@ -96,20 +116,43 @@ function Dashboard() {
             <AlertTriangle className="h-5 w-5 text-critical mt-0.5 shrink-0" />
             <div className="text-sm text-foreground">
               <span className="font-semibold text-critical">Intervention humaine requise</span> —
-              dossier <span className="font-medium">{humain.refM2s}</span>. Zineb a été notifiée sur WhatsApp.
+              dossier <span className="font-medium">{humain.refM2s}</span>. Zineb a été notifiée sur
+              WhatsApp.
             </div>
           </div>
-          <button className="text-xs text-muted-foreground hover:text-foreground" onClick={() => setDismissBanner(true)}>
+          <button
+            className="text-xs text-muted-foreground hover:text-foreground"
+            onClick={() => setDismissBanner(true)}
+          >
             Ignorer
           </button>
         </div>
       )}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Kpi label="Dossiers en retard" value={String(kpi?.en_retard ?? 0)} loading={kpiQ.isLoading} />
-        <Kpi label="Critiques < 1 h" value={String(kpi?.critiques_1h ?? 0)} tone="critical" loading={kpiQ.isLoading} />
-        <Kpi label="Appels aujourd'hui" value={String(kpi?.appels_aujourdhui ?? 0)} tone="accent" loading={kpiQ.isLoading} />
-        <Kpi label="Taux de décroche" value={`${kpi?.taux_decroche_pct ?? 0}%`} tone="success" loading={kpiQ.isLoading} />
+        <Kpi
+          label="Dossiers en retard"
+          value={String(kpi?.en_retard ?? 0)}
+          loading={kpiQ.isLoading}
+        />
+        <Kpi
+          label="Critiques < 1 h"
+          value={String(kpi?.critiques_1h ?? 0)}
+          tone="critical"
+          loading={kpiQ.isLoading}
+        />
+        <Kpi
+          label="Appels aujourd'hui"
+          value={String(kpi?.appels_aujourdhui ?? 0)}
+          tone="accent"
+          loading={kpiQ.isLoading}
+        />
+        <Kpi
+          label="Taux de décroche"
+          value={`${kpi?.taux_decroche_pct ?? 0}%`}
+          tone="success"
+          loading={kpiQ.isLoading}
+        />
       </div>
 
       <Card className="p-5">
@@ -125,21 +168,31 @@ function Dashboard() {
               />
             </div>
             <Select value={zone} onValueChange={(v) => setZone(v as never)}>
-              <SelectTrigger className="w-40"><SelectValue placeholder="Zone" /></SelectTrigger>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Zone" />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Toutes zones</SelectItem>
-                {(["Casablanca", "Rabat", "Marrakech", "Tanger", "Agadir", "Fès"] as Zone[]).map((z) => (
-                  <SelectItem key={z} value={z}>{z}</SelectItem>
-                ))}
+                {(["Casablanca", "Rabat", "Marrakech", "Tanger", "Agadir", "Fès"] as Zone[]).map(
+                  (z) => (
+                    <SelectItem key={z} value={z}>
+                      {z}
+                    </SelectItem>
+                  ),
+                )}
               </SelectContent>
             </Select>
             <Select value={stageFilter} onValueChange={(v) => setStageFilter(v as never)}>
-              <SelectTrigger className="w-40"><SelectValue placeholder="Étape" /></SelectTrigger>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Étape" />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Toutes étapes</SelectItem>
                 <SelectItem value="0">En attente</SelectItem>
                 {Array.from({ length: nbRelancesIa }, (_, i) => i + 1).map((n) => (
-                  <SelectItem key={n} value={String(n)}>Relance IA n°{n}</SelectItem>
+                  <SelectItem key={n} value={String(n)}>
+                    Relance IA n°{n}
+                  </SelectItem>
                 ))}
                 <SelectItem value="humain">Humain</SelectItem>
               </SelectContent>
@@ -160,15 +213,17 @@ function Dashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {dossiersQ.isLoading && !dossiersQ.data && (
+                {dossiersQ.isLoading &&
+                  !dossiersQ.data &&
                   Array.from({ length: 5 }).map((_, i) => (
                     <TableRow key={i}>
                       {Array.from({ length: 5 }).map((_, j) => (
-                        <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>
+                        <TableCell key={j}>
+                          <Skeleton className="h-4 w-full" />
+                        </TableCell>
                       ))}
                     </TableRow>
-                  ))
-                )}
+                  ))}
                 {!dossiersQ.isLoading && rows.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
@@ -185,7 +240,10 @@ function Dashboard() {
                       tabIndex={0}
                       onClick={go}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          go();
+                        }
                       }}
                       className="cursor-pointer hover:bg-muted/60 focus-visible:bg-muted/60 outline-none"
                     >
@@ -201,12 +259,19 @@ function Dashboard() {
                       </TableCell>
                       <TableCell>
                         <div className="font-medium text-foreground">{d.constateur.nom}</div>
-                        <div className="text-xs text-muted-foreground">{d.constateur.telephone}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {d.constateur.telephone}
+                        </div>
                       </TableCell>
                       <TableCell>{d.constateur.zone}</TableCell>
-                      <TableCell className="text-sm text-muted-foreground">{formatDateTime(d.arrivalAt)}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {formatDateTime(d.arrivalAt)}
+                      </TableCell>
                       <TableCell>
-                        <TimeRemainingBadge deadline={d.deadlineAt} remainingMinutes={d.remainingMinutes} />
+                        <TimeRemainingBadge
+                          deadline={d.deadlineAt}
+                          remainingMinutes={d.remainingMinutes}
+                        />
                       </TableCell>
                     </TableRow>
                   );

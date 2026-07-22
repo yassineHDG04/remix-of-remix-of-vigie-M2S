@@ -57,7 +57,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Réessayer
@@ -80,15 +83,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Nida2 Voicebot Center - M2S" },
-      { name: "description", content: "Supervision temps réel des relances IA sur les dossiers de sinistre en retard chez M2S ." },
+      {
+        name: "description",
+        content:
+          "Supervision temps réel des relances IA sur les dossiers de sinistre en retard chez M2S .",
+      },
       { property: "og:title", content: "Nida2 Voicebot Center - M2S" },
-      { property: "og:description", content: "Supervision temps réel des relances IA sur les dossiers de sinistre en retard chez M2S ." },
+      {
+        property: "og:description",
+        content:
+          "Supervision temps réel des relances IA sur les dossiers de sinistre en retard chez M2S .",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Nida2 Voicebot Center - M2S" },
-      { name: "twitter:description", content: "Supervision temps réel des relances IA sur les dossiers de sinistre en retard chez M2S ." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5edf8ec8-eea8-4b86-96b0-4a37813ba951" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5edf8ec8-eea8-4b86-96b0-4a37813ba951" },
+      {
+        name: "twitter:description",
+        content:
+          "Supervision temps réel des relances IA sur les dossiers de sinistre en retard chez M2S .",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5edf8ec8-eea8-4b86-96b0-4a37813ba951",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5edf8ec8-eea8-4b86-96b0-4a37813ba951",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -109,7 +132,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="fr">
-      <head><HeadContent /></head>
+      <head>
+        <HeadContent />
+      </head>
       <body>
         {children}
         <Scripts />
@@ -140,7 +165,9 @@ function AuthGate({ children }: { children: ReactNode }) {
           "vigie:accessDenied",
           "Accès refusé. Contactez l'administrateur pour obtenir un accès.",
         );
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
       void logout().finally(() => navigate({ to: "/login" }));
       return;
     }
@@ -159,18 +186,32 @@ function AuthGate({ children }: { children: ReactNode }) {
     }
     // Écran de chargement obligatoire après une connexion réussie.
     let justSignedIn = false;
-    try { justSignedIn = sessionStorage.getItem("vigie:justSignedIn") === "1"; } catch { /* ignore */ }
+    try {
+      justSignedIn = sessionStorage.getItem("vigie:justSignedIn") === "1";
+    } catch {
+      /* ignore */
+    }
     if (isAuthenticated && justSignedIn && !isLoading && !isReset) {
       navigate({ to: "/chargement" });
     }
-  }, [isReady, isAuthenticated, hasAccess, isLogin, isReset, isLoading, profile, pathname, navigate, logout]);
+  }, [
+    isReady,
+    isAuthenticated,
+    hasAccess,
+    isLogin,
+    isReset,
+    isLoading,
+    profile,
+    pathname,
+    navigate,
+    logout,
+  ]);
 
   if (!isReady) return <div className="min-h-screen bg-surface" />;
   if (fullscreen) return <>{children}</>;
   if (!isAuthenticated) return <div className="min-h-screen bg-surface" />;
   return <AppShell>{children}</AppShell>;
 }
-
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();

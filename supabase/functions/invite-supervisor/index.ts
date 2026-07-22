@@ -25,12 +25,16 @@ function genPassword(len = 14): string {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
-  if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: corsHeaders });
+  if (req.method !== "POST")
+    return new Response("Method not allowed", { status: 405, headers: corsHeaders });
 
   try {
     const authHeader = req.headers.get("Authorization") ?? "";
     if (!authHeader.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Non authentifié" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Non authentifié" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
     const token = authHeader.slice("Bearer ".length);
 
@@ -42,20 +46,29 @@ Deno.serve(async (req) => {
 
     const { data: userData, error: userErr } = await admin.auth.getUser(token);
     if (userErr || !userData.user) {
-      return new Response(JSON.stringify({ error: "Session invalide" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Session invalide" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
     const callerId = userData.user.id;
 
     const { data: roles } = await admin.from("user_roles").select("role").eq("user_id", callerId);
-    const isAdmin = (roles ?? []).some((r: any) => r.role === "admin");
+    const isAdmin = (roles ?? []).some((r: { role?: string }) => r.role === "admin");
     if (!isAdmin) {
-      return new Response(JSON.stringify({ error: "Accès refusé" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Accès refusé" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const body = await req.json().catch(() => ({}));
     const email = (body?.email ?? "").toString().trim().toLowerCase();
     if (!email || !email.includes("@")) {
-      return new Response(JSON.stringify({ error: "Email invalide" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Email invalide" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
     const fullName = (body?.full_name ?? email.split("@")[0]).toString();
 
@@ -68,7 +81,10 @@ Deno.serve(async (req) => {
       user_metadata: { full_name: fullName, invited: true },
     });
     if (createErr) {
-      return new Response(JSON.stringify({ error: createErr.message }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: createErr.message }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
     const newId = created.user.id;
 
@@ -82,10 +98,9 @@ Deno.serve(async (req) => {
     });
 
     // Le trigger a déjà mis le rôle superviseur
-    await admin.from("user_roles").upsert(
-      { user_id: newId, role: "superviseur" },
-      { onConflict: "user_id,role" },
-    );
+    await admin
+      .from("user_roles")
+      .upsert({ user_id: newId, role: "superviseur" }, { onConflict: "user_id,role" });
 
     return new Response(JSON.stringify({ email, tempPassword, userId: newId }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

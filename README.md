@@ -13,6 +13,14 @@ VITE_SUPABASE_URL=https://ton-projet.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=ta_cle_publishable
 ```
 
+Installe et vérifie le frontend avec le lockfile livré :
+
+```bash
+npm ci
+npm run build
+npm run dev
+```
+
 ## Backend
 
 Le backend Python vit dans `vigie-backend/` et se lance séparément (voir son `README.md`) :
@@ -31,6 +39,10 @@ Après les TP 1 à 4 de normalisation Supabase, exécute la migration RPC
 `supabase/migrations/20260716130000_rpc_dossiers_normalises.sql` avant de lancer
 le frontend et le backend. Le déroulé et les contrôles du TP 5/6 sont détaillés
 dans `TP5_TP6_NORMALISATION.md`.
+
+Toutes les migrations du dossier `supabase/migrations/` doivent être appliquées,
+notamment `20260716230000_whatsapp_alerts.sql` pour conserver les statuts des
+alertes envoyées par `m2s-api`.
 
 ## Authentification
 
@@ -55,3 +67,4 @@ du worker vocal, de M2S et de Meta doivent viser une URL backend HTTPS publique
 - `CHANTIER1_MOTEUR_VOCAL.md` : moteur vocal et estimation des coûts IA.
 - `CHANTIER2_SYNCHRONISATION_M2S.md` : synchronisation M2S et source de vérité.
 - `CHANTIER3_WHATSAPP_VERS_SIP.md` : appels WhatsApp, repli SIP et recette Meta/LiveKit.
+- `GUIDE_CONFIGURATION_DEPLOIEMENT_ET_COUTS.md` : configuration complète de bout en bout.

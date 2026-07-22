@@ -7,10 +7,29 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { formatDateTime } from "@/lib/time";
@@ -33,7 +52,11 @@ const PAGE_SIZE = 25;
 
 async function fetchAll(): Promise<Row[]> {
   const [{ data: profs, error: pErr }, { data: roles, error: rErr }] = await Promise.all([
-    supabase.from("profiles").select("id, email, full_name, status, created_at").not("email", "like", "%@vigie.internal").order("created_at", { ascending: false }),
+    supabase
+      .from("profiles")
+      .select("id, email, full_name, status, created_at")
+      .not("email", "like", "%@vigie.internal")
+      .order("created_at", { ascending: false }),
     supabase.from("user_roles").select("user_id, role"),
   ]);
   if (pErr) throw new Error(pErr.message);
@@ -60,7 +83,13 @@ function StatusBadge({ status }: { status: Row["status"] }) {
     invite: "bg-accent/15 text-accent",
   } as const;
   const label = status === "invite" ? "Invité" : status.charAt(0).toUpperCase() + status.slice(1);
-  return <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${map[status]}`}>{label}</span>;
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${map[status]}`}
+    >
+      {label}
+    </span>
+  );
 }
 
 function SuperviseursPage() {
@@ -85,7 +114,10 @@ function SuperviseursPage() {
   const inviteMut = useMutation({
     mutationFn: async () => {
       const { data, error } = await supabase.functions.invoke("invite-supervisor", {
-        body: { email: inviteEmail.trim().toLowerCase(), full_name: inviteName.trim() || undefined },
+        body: {
+          email: inviteEmail.trim().toLowerCase(),
+          full_name: inviteName.trim() || undefined,
+        },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
@@ -135,10 +167,14 @@ function SuperviseursPage() {
       if (error) throw new Error(error.message);
       // Role : upsert / delete admin selon rôle
       if (row.role === "admin") {
-        await supabase.from("user_roles").upsert({ user_id: row.id, role: "admin" }, { onConflict: "user_id,role" });
+        await supabase
+          .from("user_roles")
+          .upsert({ user_id: row.id, role: "admin" }, { onConflict: "user_id,role" });
       } else {
         await supabase.from("user_roles").delete().eq("user_id", row.id).eq("role", "admin");
-        await supabase.from("user_roles").upsert({ user_id: row.id, role: "superviseur" }, { onConflict: "user_id,role" });
+        await supabase
+          .from("user_roles")
+          .upsert({ user_id: row.id, role: "superviseur" }, { onConflict: "user_id,role" });
       }
     },
     onSuccess: () => {
@@ -177,26 +213,49 @@ function SuperviseursPage() {
                   Array.from({ length: 4 }).map((_, i) => (
                     <TableRow key={i}>
                       {Array.from({ length: 6 }).map((_, j) => (
-                        <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>
+                        <TableCell key={j}>
+                          <Skeleton className="h-4 w-full" />
+                        </TableCell>
                       ))}
                     </TableRow>
                   ))}
                 {!q.isLoading && pageRows.length === 0 && (
-                  <TableRow><TableCell colSpan={6} className="text-center py-10 text-muted-foreground">Aucun superviseur.</TableCell></TableRow>
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
+                      Aucun superviseur.
+                    </TableCell>
+                  </TableRow>
                 )}
                 {pageRows.map((r) => (
                   <TableRow key={r.id}>
                     <TableCell className="font-medium">{r.email}</TableCell>
                     <TableCell>{r.full_name}</TableCell>
                     <TableCell className="capitalize">{r.role}</TableCell>
-                    <TableCell><StatusBadge status={r.status} /></TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{formatDateTime(new Date(r.created_at))}</TableCell>
+                    <TableCell>
+                      <StatusBadge status={r.status} />
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {formatDateTime(new Date(r.created_at))}
+                    </TableCell>
                     <TableCell className="text-right space-x-1">
-                      <Button size="sm" variant="ghost" onClick={() => setEditing(r)} title="Modifier">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setEditing(r)}
+                        title="Modifier"
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => toggleStatusMut.mutate(r)} title={r.status === "actif" ? "Suspendre" : "Activer"} disabled={toggleStatusMut.isPending}>
-                        <Power className={`h-4 w-4 ${r.status === "actif" ? "text-critical" : "text-success"}`} />
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => toggleStatusMut.mutate(r)}
+                        title={r.status === "actif" ? "Suspendre" : "Activer"}
+                        disabled={toggleStatusMut.isPending}
+                      >
+                        <Power
+                          className={`h-4 w-4 ${r.status === "actif" ? "text-critical" : "text-success"}`}
+                        />
                       </Button>
                       <Button
                         size="sm"
@@ -205,7 +264,8 @@ function SuperviseursPage() {
                         disabled={r.id === user?.id || deleteMut.isPending}
                         onClick={() => {
                           if (r.id === user?.id) return;
-                          if (confirm(`Supprimer définitivement ${r.email} ?`)) deleteMut.mutate(r.id);
+                          if (confirm(`Supprimer définitivement ${r.email} ?`))
+                            deleteMut.mutate(r.id);
                         }}
                       >
                         <Trash2 className="h-4 w-4 text-critical" />
@@ -218,28 +278,44 @@ function SuperviseursPage() {
           </div>
         </div>
 
-        {totalPages > 1 && (
-          <Pager page={currentPage} totalPages={totalPages} onChange={setPage} />
-        )}
+        {totalPages > 1 && <Pager page={currentPage} totalPages={totalPages} onChange={setPage} />}
       </Card>
 
       {/* Dialog invitation */}
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Inviter un superviseur</DialogTitle></DialogHeader>
+          <DialogHeader>
+            <DialogTitle>Inviter un superviseur</DialogTitle>
+          </DialogHeader>
           <div className="space-y-3">
             <div className="space-y-1.5">
               <Label htmlFor="iemail">Email</Label>
-              <Input id="iemail" type="email" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} placeholder="prenom@m2s.ma" />
+              <Input
+                id="iemail"
+                type="email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                placeholder="prenom@m2s.ma"
+              />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="iname">Nom (optionnel)</Label>
-              <Input id="iname" value={inviteName} onChange={(e) => setInviteName(e.target.value)} placeholder="Prénom Nom" />
+              <Input
+                id="iname"
+                value={inviteName}
+                onChange={(e) => setInviteName(e.target.value)}
+                placeholder="Prénom Nom"
+              />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setInviteOpen(false)}>Annuler</Button>
-            <Button onClick={() => inviteMut.mutate()} disabled={!inviteEmail.includes("@") || inviteMut.isPending}>
+            <Button variant="outline" onClick={() => setInviteOpen(false)}>
+              Annuler
+            </Button>
+            <Button
+              onClick={() => inviteMut.mutate()}
+              disabled={!inviteEmail.includes("@") || inviteMut.isPending}
+            >
               {inviteMut.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               Créer le compte superviseur
             </Button>
@@ -250,7 +326,9 @@ function SuperviseursPage() {
       {/* Dialog credentials */}
       <Dialog open={!!tempCreds} onOpenChange={(o) => !o && setTempCreds(null)}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Compte créé</DialogTitle></DialogHeader>
+          <DialogHeader>
+            <DialogTitle>Compte créé</DialogTitle>
+          </DialogHeader>
           {tempCreds && (
             <div className="space-y-3 text-sm">
               <div>
@@ -260,8 +338,17 @@ function SuperviseursPage() {
               <div>
                 <div className="text-xs text-muted-foreground">Mot de passe temporaire</div>
                 <div className="flex items-center gap-2">
-                  <code className="flex-1 rounded bg-muted px-2 py-1 font-mono text-xs">{tempCreds.tempPassword}</code>
-                  <Button size="sm" variant="outline" onClick={() => { navigator.clipboard.writeText(tempCreds.tempPassword); toast.success("Copié"); }}>
+                  <code className="flex-1 rounded bg-muted px-2 py-1 font-mono text-xs">
+                    {tempCreds.tempPassword}
+                  </code>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      navigator.clipboard.writeText(tempCreds.tempPassword);
+                      toast.success("Copié");
+                    }}
+                  >
                     <Copy className="h-3.5 w-3.5" />
                   </Button>
                 </div>
@@ -280,7 +367,9 @@ function SuperviseursPage() {
       {/* Dialog édition */}
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Modifier le profil</DialogTitle></DialogHeader>
+          <DialogHeader>
+            <DialogTitle>Modifier le profil</DialogTitle>
+          </DialogHeader>
           {editing && (
             <div className="space-y-3">
               <div className="space-y-1.5">
@@ -289,12 +378,21 @@ function SuperviseursPage() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="en">Nom</Label>
-                <Input id="en" value={editing.full_name} onChange={(e) => setEditing({ ...editing, full_name: e.target.value })} />
+                <Input
+                  id="en"
+                  value={editing.full_name}
+                  onChange={(e) => setEditing({ ...editing, full_name: e.target.value })}
+                />
               </div>
               <div className="space-y-1.5">
                 <Label>Rôle</Label>
-                <Select value={editing.role} onValueChange={(v) => setEditing({ ...editing, role: v as Row["role"] })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                <Select
+                  value={editing.role}
+                  onValueChange={(v) => setEditing({ ...editing, role: v as Row["role"] })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="admin">Admin</SelectItem>
                     <SelectItem value="superviseur">Superviseur</SelectItem>
@@ -303,8 +401,13 @@ function SuperviseursPage() {
               </div>
               <div className="space-y-1.5">
                 <Label>Statut</Label>
-                <Select value={editing.status} onValueChange={(v) => setEditing({ ...editing, status: v as Row["status"] })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                <Select
+                  value={editing.status}
+                  onValueChange={(v) => setEditing({ ...editing, status: v as Row["status"] })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="actif">Actif</SelectItem>
                     <SelectItem value="suspendu">Suspendu</SelectItem>
@@ -315,7 +418,9 @@ function SuperviseursPage() {
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditing(null)}>Annuler</Button>
+            <Button variant="outline" onClick={() => setEditing(null)}>
+              Annuler
+            </Button>
             <Button onClick={() => editing && editMut.mutate(editing)} disabled={editMut.isPending}>
               {editMut.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               Enregistrer
@@ -327,19 +432,45 @@ function SuperviseursPage() {
   );
 }
 
-function Pager({ page, totalPages, onChange }: { page: number; totalPages: number; onChange: (p: number) => void }) {
+function Pager({
+  page,
+  totalPages,
+  onChange,
+}: {
+  page: number;
+  totalPages: number;
+  onChange: (p: number) => void;
+}) {
   const nums = pageNumbers(page, totalPages);
   return (
     <div className="mt-4 flex items-center justify-center gap-1 text-sm">
-      <Button size="sm" variant="outline" onClick={() => onChange(page - 1)} disabled={page <= 1}>Précédent</Button>
+      <Button size="sm" variant="outline" onClick={() => onChange(page - 1)} disabled={page <= 1}>
+        Précédent
+      </Button>
       {nums.map((n, i) =>
         n === "…" ? (
-          <span key={`e${i}`} className="px-2 text-muted-foreground">…</span>
+          <span key={`e${i}`} className="px-2 text-muted-foreground">
+            …
+          </span>
         ) : (
-          <Button key={n} size="sm" variant={n === page ? "default" : "outline"} onClick={() => onChange(n as number)}>{n}</Button>
+          <Button
+            key={n}
+            size="sm"
+            variant={n === page ? "default" : "outline"}
+            onClick={() => onChange(n as number)}
+          >
+            {n}
+          </Button>
         ),
       )}
-      <Button size="sm" variant="outline" onClick={() => onChange(page + 1)} disabled={page >= totalPages}>Suivant</Button>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => onChange(page + 1)}
+        disabled={page >= totalPages}
+      >
+        Suivant
+      </Button>
     </div>
   );
 }

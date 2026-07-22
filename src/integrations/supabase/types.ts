@@ -609,6 +609,81 @@ export type Database = {
         };
         Relationships: [];
       };
+      whatsapp_alerts: {
+        Row: {
+          accepted_at: string;
+          created_at: string;
+          delivered_at: string | null;
+          dossier_id: string;
+          failed_at: string | null;
+          failure_reason: string | null;
+          id: string;
+          instance_id: string;
+          last_event_at: string | null;
+          last_event_id: string | null;
+          m2s_message_id: string;
+          read_at: string | null;
+          recipient: string;
+          sent_at: string | null;
+          status: string;
+          updated_at: string;
+          whatsapp_contact_id: string | null;
+        };
+        Insert: {
+          accepted_at?: string;
+          created_at?: string;
+          delivered_at?: string | null;
+          dossier_id: string;
+          failed_at?: string | null;
+          failure_reason?: string | null;
+          id?: string;
+          instance_id?: string;
+          last_event_at?: string | null;
+          last_event_id?: string | null;
+          m2s_message_id: string;
+          read_at?: string | null;
+          recipient?: string;
+          sent_at?: string | null;
+          status?: string;
+          updated_at?: string;
+          whatsapp_contact_id?: string | null;
+        };
+        Update: {
+          accepted_at?: string;
+          created_at?: string;
+          delivered_at?: string | null;
+          dossier_id?: string;
+          failed_at?: string | null;
+          failure_reason?: string | null;
+          id?: string;
+          instance_id?: string;
+          last_event_at?: string | null;
+          last_event_id?: string | null;
+          m2s_message_id?: string;
+          read_at?: string | null;
+          recipient?: string;
+          sent_at?: string | null;
+          status?: string;
+          updated_at?: string;
+          whatsapp_contact_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_alerts_dossier_id_fkey";
+            columns: ["dossier_id"];
+            isOneToOne: true;
+            referencedRelation: "dossiers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "whatsapp_alerts_whatsapp_contact_id_fkey";
+            columns: ["whatsapp_contact_id"];
+            isOneToOne: false;
+            referencedRelation: "whatsapp_contacts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       v_dossiers_complets: {

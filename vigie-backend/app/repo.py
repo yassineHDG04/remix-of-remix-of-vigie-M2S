@@ -21,6 +21,7 @@ from datetime import datetime
 from typing import Optional
 
 from .config import config
+from .time_utils import parse_utc_datetime, utcnow
 
 
 # ============================================================
@@ -142,16 +143,7 @@ class TranscriptRow:
 #  Utils datetime
 # ============================================================
 def _parse_dt(v) -> Optional[datetime]:
-    if v is None:
-        return None
-    if isinstance(v, datetime):
-        return v.replace(tzinfo=None)
-    s = str(v).replace("Z", "+00:00")
-    try:
-        d = datetime.fromisoformat(s)
-        return d.replace(tzinfo=None)
-    except ValueError:
-        return None
+    return parse_utc_datetime(v)
 
 
 def _iso(v: Optional[datetime]) -> Optional[str]:
@@ -409,7 +401,101 @@ class SqlRepo:
                 id=c.id, label=c.label, numero=c.numero,
                 whatsapp_token=c.whatsapp_token, whatsapp_phone_number_id=c.whatsapp_phone_number_id,
             )
-        
+
+    # -- suivi des alertes WhatsApp M2S --
+    def record_whatsapp_alert(self, values: dict) -> None:
+        """Enregistre une alerte sans faire régresser son statut existant."""
+        from .models import WhatsappAlert
+
+        payload = dict(values)
+        for field in ("accepted_at", "sent_at", "delivered_at", "read_at", "failed_at"):
+            if field in payload:
+                payload[field] = _parse_dt(payload[field])
+
+        with self._Session() as db:
+            alert = (
+                db.query(WhatsappAlert)
+                .filter_by(dossier_id=payload["dossier_id"])
+                .first()
+            )
+
+            if alert:
+                # Une réponse idempotente ou une relance peut actualiser le
+                # routage, mais ne doit pas remettre read/delivered à accepted.
+                for key, value in payload.items():
+                    if key not in {"status", "accepted_at", "id", "dossier_id"}:
+                        setattr(alert, key, value)
+                alert.updated_at = utcnow()
+            else:
+                alert = WhatsappAlert(**payload)
+                db.add(alert)
+
+            db.commit()
+
+    def update_whatsapp_alert_status(
+        self,
+        m2s_message_id: str,
+        status: str,
+        event_id: str | None = None,
+        event_at: datetime | None = None,
+        failure_reason: str | None = None,
+    ) -> bool:
+        """Applique un événement M2S de façon idempotente et monotone."""
+        from .models import WhatsappAlert
+
+        normal_ranks = {"accepted": 0, "sent": 1, "delivered": 2, "read": 3}
+        if status not in normal_ranks and status != "failed":
+            return False
+
+        with self._Session() as db:
+            alert = (
+                db.query(WhatsappAlert)
+                .filter_by(m2s_message_id=m2s_message_id)
+                .first()
+            )
+            if not alert:
+                return False
+
+            if event_id and alert.last_event_id == event_id:
+                return True
+
+            event_datetime = _parse_dt(event_at) or utcnow()
+            last_event_datetime = _parse_dt(alert.last_event_at)
+            if last_event_datetime and event_datetime < last_event_datetime:
+                return True
+
+            current_status = alert.status
+            if current_status == status:
+                return True
+            if status == "failed" and current_status in {"delivered", "read"}:
+                return True
+            if status in normal_ranks and current_status in normal_ranks:
+                if normal_ranks[status] <= normal_ranks[current_status]:
+                    return True
+
+            alert.status = status
+            alert.last_event_id = event_id
+            alert.last_event_at = event_datetime
+            alert.updated_at = utcnow()
+
+            timestamp_fields = {
+                "sent": "sent_at",
+                "delivered": "delivered_at",
+                "read": "read_at",
+                "failed": "failed_at",
+            }
+            timestamp_field = timestamp_fields.get(status)
+            if timestamp_field and not getattr(alert, timestamp_field):
+                setattr(alert, timestamp_field, event_datetime)
+
+            if status == "failed":
+                alert.failure_reason = failure_reason or "Échec WhatsApp non précisé"
+            elif current_status == "failed":
+                alert.failure_reason = None
+                alert.failed_at = None
+
+            db.commit()
+            return True
 
     # -- calls --
     def list_calls(self, dossier_id: str) -> list[CallRow]:
@@ -781,12 +867,12 @@ class SupabaseRepo:
         self._tbl("whatsapp_alerts").insert(payload).execute()
 
     def update_whatsapp_alert_status(
-    self,
-    m2s_message_id: str,
-    status: str,
-    event_id: str | None = None,
-    event_at: datetime | None = None,
-    failure_reason: str | None = None,
+        self,
+        m2s_message_id: str,
+        status: str,
+        event_id: str | None = None,
+        event_at: datetime | None = None,
+        failure_reason: str | None = None,
     ) -> bool:
         """
         Met à jour le statut d'une alerte WhatsApp sans régression.
@@ -827,7 +913,7 @@ class SupabaseRepo:
         if event_id and current.get("last_event_id") == event_id:
             return True
 
-        event_datetime = _parse_dt(event_at) or datetime.utcnow()
+        event_datetime = _parse_dt(event_at) or utcnow()
         last_event_datetime = _parse_dt(current.get("last_event_at"))
 
         # Événement plus ancien que celui déjà traité

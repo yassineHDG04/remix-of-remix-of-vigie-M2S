@@ -14,7 +14,11 @@ export const Route = createFileRoute("/calendrier")({
 });
 
 function sameDay(a: Date, b: Date) {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 
 function Calendrier() {
@@ -36,20 +40,30 @@ function Calendrier() {
     const daysInMonth = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
     const cells: (Date | null)[] = [];
     for (let i = 0; i < startWeekday; i++) cells.push(null);
-    for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(first.getFullYear(), first.getMonth(), d));
+    for (let d = 1; d <= daysInMonth; d++)
+      cells.push(new Date(first.getFullYear(), first.getMonth(), d));
     while (cells.length % 7 !== 0) cells.push(null);
     return cells;
   }, [cursor]);
 
   if ((retardQ.isError && !retardQ.data) || (validesQ.isError && !validesQ.data)) {
-    return <ErrorState onRetry={() => { retardQ.refetch(); validesQ.refetch(); }} />;
+    return (
+      <ErrorState
+        onRetry={() => {
+          retardQ.refetch();
+          validesQ.refetch();
+        }}
+      />
+    );
   }
 
   const dossiers: Dossier[] = [...(retardQ.data ?? []), ...(validesQ.data ?? [])];
 
   function dayDossiers(day: Date): { retard: Dossier[]; valides: Dossier[] } {
     const retard = dossiers.filter((d) => d.status === "en_retard" && sameDay(d.arrivalAt, day));
-    const valides = dossiers.filter((d) => d.status === "valide" && d.validatedAt && sameDay(d.validatedAt, day));
+    const valides = dossiers.filter(
+      (d) => d.status === "valide" && d.validatedAt && sameDay(d.validatedAt, day),
+    );
     return { retard, valides };
   }
 
@@ -57,7 +71,9 @@ function Calendrier() {
 
   const now = new Date();
   const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const nextDisabled = cursor.getFullYear() === currentMonthStart.getFullYear() && cursor.getMonth() === currentMonthStart.getMonth();
+  const nextDisabled =
+    cursor.getFullYear() === currentMonthStart.getFullYear() &&
+    cursor.getMonth() === currentMonthStart.getMonth();
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-5">
@@ -65,10 +81,22 @@ function Calendrier() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold capitalize">{monthLabel}</h2>
           <div className="flex items-center gap-1">
-            <Button variant="outline" size="icon" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
+            >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" onClick={() => { const d = new Date(); d.setDate(1); setCursor(d); }}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const d = new Date();
+                d.setDate(1);
+                setCursor(d);
+              }}
+            >
               Aujourd'hui
             </Button>
             <Button
@@ -85,7 +113,9 @@ function Calendrier() {
 
         <div className="grid grid-cols-7 gap-1 text-xs text-muted-foreground mb-2 font-medium">
           {["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].map((d) => (
-            <div key={d} className="text-center py-1">{d}</div>
+            <div key={d} className="text-center py-1">
+              {d}
+            </div>
           ))}
         </div>
         <div className="grid grid-cols-7 gap-1">
@@ -102,10 +132,22 @@ function Calendrier() {
                   isSelected ? "bg-blue-soft ring-1 ring-accent" : ""
                 } ${isToday && !isSelected ? "bg-muted" : ""}`}
               >
-                <span className={`text-xs ${isToday ? "font-bold text-accent" : "text-foreground"}`}>{day.getDate()}</span>
+                <span
+                  className={`text-xs ${isToday ? "font-bold text-accent" : "text-foreground"}`}
+                >
+                  {day.getDate()}
+                </span>
                 <div className="mt-auto flex gap-1">
-                  {retard.length > 0 && <span className="inline-flex items-center rounded-full bg-critical/15 text-critical text-[10px] px-1.5 font-medium">{retard.length}</span>}
-                  {valides.length > 0 && <span className="inline-flex items-center rounded-full bg-success/15 text-success text-[10px] px-1.5 font-medium">{valides.length}</span>}
+                  {retard.length > 0 && (
+                    <span className="inline-flex items-center rounded-full bg-critical/15 text-critical text-[10px] px-1.5 font-medium">
+                      {retard.length}
+                    </span>
+                  )}
+                  {valides.length > 0 && (
+                    <span className="inline-flex items-center rounded-full bg-success/15 text-success text-[10px] px-1.5 font-medium">
+                      {valides.length}
+                    </span>
+                  )}
                 </div>
               </button>
             );
@@ -113,8 +155,12 @@ function Calendrier() {
         </div>
 
         <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-critical" /> Retard</span>
-          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-success" /> Validé</span>
+          <span className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-critical" /> Retard
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-success" /> Validé
+          </span>
         </div>
       </Card>
 
@@ -126,20 +172,35 @@ function Calendrier() {
                 <div className="text-xs text-muted-foreground uppercase">Journée</div>
                 <div className="text-base font-semibold">{formatDate(selectedDay)}</div>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setSelectedDay(null)}><X className="h-4 w-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedDay(null)}>
+                <X className="h-4 w-4" />
+              </Button>
             </div>
-            {selectedData && selectedData.retard.length === 0 && selectedData.valides.length === 0 ? (
-              <div className="text-sm text-muted-foreground py-6 text-center">Aucun dossier ce jour-là.</div>
+            {selectedData &&
+            selectedData.retard.length === 0 &&
+            selectedData.valides.length === 0 ? (
+              <div className="text-sm text-muted-foreground py-6 text-center">
+                Aucun dossier ce jour-là.
+              </div>
             ) : (
               <div className="space-y-4">
                 {selectedData!.retard.length > 0 && (
                   <div>
-                    <div className="text-xs font-semibold text-critical mb-2 uppercase">En retard ({selectedData!.retard.length})</div>
+                    <div className="text-xs font-semibold text-critical mb-2 uppercase">
+                      En retard ({selectedData!.retard.length})
+                    </div>
                     <div className="space-y-1.5">
                       {selectedData!.retard.map((d) => (
-                        <Link key={d.id} to="/dossiers/$id" params={{ id: d.id }} className="flex justify-between rounded-md hover:bg-muted px-2 py-1.5 text-sm">
+                        <Link
+                          key={d.id}
+                          to="/dossiers/$id"
+                          params={{ id: d.id }}
+                          className="flex justify-between rounded-md hover:bg-muted px-2 py-1.5 text-sm"
+                        >
                           <span className="font-mono text-xs text-accent">{d.refM2s}</span>
-                          <span className="text-muted-foreground truncate ml-2">{d.constateur.nom}</span>
+                          <span className="text-muted-foreground truncate ml-2">
+                            {d.constateur.nom}
+                          </span>
                         </Link>
                       ))}
                     </div>
@@ -147,12 +208,21 @@ function Calendrier() {
                 )}
                 {selectedData!.valides.length > 0 && (
                   <div>
-                    <div className="text-xs font-semibold text-success mb-2 uppercase">Validés ({selectedData!.valides.length})</div>
+                    <div className="text-xs font-semibold text-success mb-2 uppercase">
+                      Validés ({selectedData!.valides.length})
+                    </div>
                     <div className="space-y-1.5">
                       {selectedData!.valides.map((d) => (
-                        <Link key={d.id} to="/dossiers/$id" params={{ id: d.id }} className="flex justify-between rounded-md hover:bg-muted px-2 py-1.5 text-sm">
+                        <Link
+                          key={d.id}
+                          to="/dossiers/$id"
+                          params={{ id: d.id }}
+                          className="flex justify-between rounded-md hover:bg-muted px-2 py-1.5 text-sm"
+                        >
                           <span className="font-mono text-xs text-accent">{d.refM2s}</span>
-                          <span className="text-muted-foreground truncate ml-2">{d.constateur.nom}</span>
+                          <span className="text-muted-foreground truncate ml-2">
+                            {d.constateur.nom}
+                          </span>
                         </Link>
                       ))}
                     </div>
